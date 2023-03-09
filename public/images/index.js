@@ -1,0 +1,8 @@
+export {default as DefaultBlue} from './default-blue.png'
+export {default as DefaultGreen} from './default-green.png'
+export {default as DefaultRed} from './default-red.png'
+export {default as DefaultSlate} from './default-slate.png'
+export {default as Hero} from './hero.jpg'
+export {default as Logo} from './logo.png'
+export {default as Poster} from './poster.png'
+export {default as Thumbnail} from './thumbnail.jpg'

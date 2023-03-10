@@ -3,10 +3,11 @@ interface InputProps {
     onChange: any,
     value: string,
     label: string,
-    type?: string
+    type?: string,
+    onClick?: any
 }
 
-const Input = ({id, onChange, value, label, type} : InputProps) => {
+const Input = ({id, onChange, value, label, type, onClick} : InputProps) => {
   return (
     <div className="relative">
         <input 
@@ -16,6 +17,7 @@ const Input = ({id, onChange, value, label, type} : InputProps) => {
             placeholder=" "
             onChange={onChange}
             value={value}
+            onClick={onClick}
         />
         <label htmlFor={id} 
         className="

@@ -1,6 +1,10 @@
 import { useCallback, useState } from 'react'
 import {Button, Input} from '../components'
-import {Hero, Logo} from '../public/images'
+import axios from 'axios'
+import {signIn} from 'next-auth/react'
+import { FcGoogle } from 'react-icons/fc'
+import { FaGithub } from "react-icons/fa";
+
 
 const Auth = () => {
     const [email, setEmail] = useState('')
@@ -11,6 +15,35 @@ const Auth = () => {
     const toggleVariant = useCallback(() => {
         setVariant((currentVariant) => currentVariant === 'login' ? 'register' : 'login')
     }, [])
+
+    // Sign in user
+    const login = useCallback( async () => {
+        try {
+            await signIn('credentials', {
+                email,
+                password,
+                callbackUrl: '/profiles'
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }, [email, password],)
+
+    // Sign up user
+    const register = useCallback( async () => {
+        try {
+            await axios.post('/api/register', {
+                name,
+                email,
+                password
+            })
+            login()
+        } catch (error) {
+            console.log(error);
+        }
+    }, [email, name, password, login])
+    
     
 
   return (
@@ -34,9 +67,9 @@ const Auth = () => {
                         <Input label='Password' id='password' type='password' value={password} onChange={(e:any) => setPassword(e.target.value)} />
                     </div>
                     {variant === 'login' ? (
-                        <Button text='Login' />
+                        <Button onClick={login} text='Login' />
                     ) : (
-                        <Button text='Sign Up' />
+                        <Button onClick={register} text='Sign Up' />
                     )}
                     <p className='text-neutral-500 mt-12'>
                         {variant === 'login' ? 'First time using Netflix?' : 'Already have an account?'} 
@@ -44,6 +77,21 @@ const Auth = () => {
                             {variant === 'login' ? 'Create an account' : 'Sign in'}
                         </span>
                     </p>
+                    <div className='flex flex-row items-center justify-center mt-8 gap-4'>
+                        <div onClick={() => signIn('google', {callbackUrl: '/profiles'})} className="w-10 h-10 bg-white 
+                        rounded-full flex 
+                        items-center justify-center 
+                        cursor-pointer hover:opacity-80 transition">
+                            <FcGoogle size={30} />
+                        </div>
+                        
+                        <div onClick={() => signIn('github', {callbackUrl: '/profiles'})} className="w-10 h-10 bg-white text-gray-900
+                        rounded-full flex 
+                        items-center justify-center 
+                        cursor-pointer hover:opacity-80 transition">
+                            <FaGithub size={30} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

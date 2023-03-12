@@ -1,9 +1,10 @@
 import type { NextPage, NextPageContext } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import { Button } from '../components'
-import { getSession, signOut } from 'next-auth/react'
-import useCurrentUser from '../hooks/usecurrentUser'
+import { BillBoard, InfoModal, MovieList, Navbar } from '../components'
+import { getSession } from 'next-auth/react'
+import useCurrentUser from '../hooks/useCurrentUser'
+import useMovieList from '../hooks/useMovieList'
+import useFavorites from '../hooks/useFavorites'
+import useInfoModal from '../hooks/useInfoModal'
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context)
@@ -24,12 +25,23 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const Home: NextPage = () => {
   const {data: user } = useCurrentUser()
+
+  const {data: movies = []} = useMovieList()
+
+  const {data: favorites} = useFavorites()
+
+  const {isOpen, closeModal} = useInfoModal()
+
   return (
-    <>
-    <h1>Supremeflix</h1>
-    <p>Logged in as: {user?.name}</p>
-    <button onClick={() => signOut()} className='h-10 w-72 bg-white text-black'>Logout</button>
-    </>
+    <div className='h-auto'>
+      <InfoModal visible={isOpen} onClose={closeModal} />
+    <Navbar />
+    <BillBoard />
+    <div className='pb-40'>
+      <MovieList data={movies} title='Trending Now' />
+      <MovieList data={favorites} title='My List' />
+    </div>
+    </div>
   )
 }
 
